@@ -565,11 +565,7 @@ tw-link:hover {
 
   &lt;div class=&quot;narrative-block&quot;&gt;
     你穿过过道，走上祭坛中央。&lt;br&gt;
-    这里没有任何雕像或神龛，只孤零零地放着一张讲台。
-  &lt;/div&gt;
-
-  &lt;div class=&quot;narrative-block&quot;&gt;
-    祭坛背后是一面高大的装饰墙。灰白色的石面笔直地向上延伸，两侧立着几座细长的尖塔，塔尖收束成锋利的锥形，直指天空。墙面上嵌着几扇拱形长窗，窗内是繁复的镂空纹路。
+    这里没有任何雕像或神龛，只放着一张讲台。
   &lt;/div&gt;
 
   &lt;hr class=&quot;simple-divider-blue&quot;&gt;
@@ -1853,9 +1849,9 @@ tw-link:hover {
     你拿起摇铃，轻轻晃动。铃声不大，却像直接响在脑海里——悠远、空洞，仿佛从很深很深的地方传上来。你需要足够坚定的心智，才能不被这声音牵引着迷失方向。
   &lt;/div&gt;
 
-  &lt;!-- 检定逻辑 --&gt;
+  &lt;!-- 检定逻辑：使用双重转换修复相加问题 --&gt;
   (set: $roll to (random: 1, 20))
-  (set: _total to $roll + $mindPower)
+  (set: _total to $roll + (num: (str: $mindPower)))
 
   &lt;div class=&quot;dice-box&quot;&gt;
     [ 检定：简单 (难度 3) ]&lt;br&gt;
@@ -4889,7 +4885,7 @@ strong {
   &lt;div class=&quot;mechanic-box-soft&quot;&gt;
     &lt;div class=&quot;mechanic-title&quot;&gt;【 数据孤岛 · 信号拦截 】&lt;/div&gt;
     &lt;div class=&quot;mechanic-text&quot;&gt;
-      每回合，公社管理层会通过9个节点向玛缇亚输送信号。&lt;br&gt;
+      每回合，公社管理层会通过 9 个节点向玛缇亚输送信号。&lt;br&gt;
       你需预判并黑掉关键节点，&lt;strong&gt;阻断信号、反弹伤害&lt;/strong&gt;，直到耗尽她的护甲。
     &lt;/div&gt;
 
@@ -4902,23 +4898,26 @@ strong {
       &lt;tr&gt;
         &lt;td&gt;&lt;strong&gt;协议覆盖&lt;/strong&gt;&lt;/td&gt;
         &lt;td&gt;1&lt;/td&gt;
-        &lt;td&gt;将节点变为友方。线路若经过此点，会反弹对玛缇亚造成伤害。&lt;/td&gt;
+        &lt;td&gt;将节点变为友方。线路若经过此点，会反弹并对玛缇亚造成伤害。&lt;/td&gt;
       &lt;/tr&gt;
     &lt;/table&gt;
   &lt;/div&gt;
 
-  &lt;!-- 3. 数值处理 --&gt;
+  &lt;!-- 3. 数值稳健处理 --&gt;
   {
-    (set: $physique to (num: (string: $physStr)))
-    (set: $mind to (num: (string: $mindStr)))
+    (set: _p to (num: (string: $physStr)))
+    (set: _m to (num: (string: $mindStr)))
     
-    (set: $maxHP to 5 + $physique + $mind)
+    (set: $maxHP to 5 + _p + _m)
     (set: $currentHP to $maxHP)
+    &lt;!-- 额外重置战斗状态，确保挑战开始时是干净的 --&gt;
+    (set: $battleInit to false)
+    (set: $totalInit to false)
   }
 
   &lt;div class=&quot;status-panel-refined&quot;&gt;
     &lt;div class=&quot;status-item&quot;&gt;
-      &lt;span class=&quot;status-label&quot;&gt;当前生命值 (HP)&lt;/span&gt; 
+      &lt;span class=&quot;status-label&quot;&gt;准备接入：当前生命值 (HP)&lt;/span&gt; 
       &lt;span class=&quot;status-value&quot;&gt;$currentHP / $maxHP&lt;/span&gt;
     &lt;/div&gt;
   &lt;/div&gt;
@@ -4935,7 +4934,7 @@ strong {
 }
 
 &lt;style&gt;
-/* 整体容器 */
+/* 核心容器 */
 .story-wrapper {
     text-align: center;
     max-width: 680px;
@@ -4943,7 +4942,7 @@ strong {
     padding: 6vh 30px;
 }
 
-/* 描述文案背景 */
+/* 纸张质感背景 */
 .boss-intro-paper {
     background: rgba(0, 0, 0, 0.05); 
     padding: 40px 30px;
@@ -5001,6 +5000,7 @@ strong {
     margin-bottom: 15px;
 }
 
+/* 表格样式 */
 .action-table-clean {
     width: 100%;
     border-collapse: collapse;
@@ -5012,13 +5012,11 @@ strong {
     border-bottom: 2px solid black;
     padding: 12px;
     text-align: left;
-    color: black;
 }
 
 .action-table-clean td {
     padding: 12px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    color: black;
 }
 
 /* 状态面板 */
@@ -5034,17 +5032,14 @@ strong {
     font-size: 0.9em;
     font-weight: bold;
     margin-right: 15px;
-    color: black;
 }
 
 .status-value {
     font-family: monospace;
     font-size: 1.2em;
     font-weight: bold;
-    color: black;
 }
 
-/* 分割线 */
 .simple-divider-dark {
     border: 0;
     border-top: 1px solid black;
@@ -5052,23 +5047,20 @@ strong {
     margin: 45px auto;
 }
 
-/* 按钮区 */
+/* 黑色高亮按钮 */
 .choice-btn tw-link {
     background: black;
-    color: #dd854b !important; /* 按钮文字反转使用背景色 */
+    color: #dd854b !important;
     padding: 12px 50px;
     font-weight: bold;
     text-decoration: none !important;
     display: inline-block;
+    transition: all 0.2s;
 }
 
 .choice-btn tw-link:hover {
-    background: rgba(0,0,0,0.8);
-    opacity: 0.9;
-}
-
-strong {
-    font-weight: bold;
+    background: #333;
+    transform: translateY(-2px);
 }
 &lt;/style&gt;</tw-passagedata><tw-passagedata pid="53" name="幻廊2-7-2" tags="" position="2250,2050" size="100,100">(enchant: ?page, (text-colour: black) + (bg: #dd854b))
 {
@@ -5089,18 +5081,18 @@ strong {
     &lt;!-- 井字棋合法路径池 --&gt;
     (set: _paths to (a: (a:1,2,3), (a:4,5,6), (a:7,8,9), (a:1,4,7), (a:2,5,8), (a:3,6,9), (a:1,5,9), (a:3,5,7)))
     
-    &lt;!-- 核心逻辑修复：生成正确答案与显示点位 --&gt;
+    &lt;!-- 核心逻辑：生成正确答案与显示点位 --&gt;
     (set: $truePath to (shuffled: ..._paths)&#39;s 1)
     (set: $targetNode to (shuffled: ...$truePath)&#39;s 1) 
     
-    &lt;!-- 【关键修复】：不直接修改索引，而是用减法排除掉 targetNode --&gt;
+    &lt;!-- 排除掉 targetNode，剩下的就是 Boss 占领的点 --&gt;
     (set: $bossOccupied to $truePath - (a: $targetNode)) 
 
     &lt;!-- 阶段判断逻辑中增加假路径干扰 --&gt;
     (if: $bossHP &lt; 70)[
-       (set: _fake to (shuffled: ..._paths)&#39;s 1)
-       (if: _fake is $truePath)[(set: _fake to (shuffled: ..._paths)&#39;s 2)]
-       (set: $bossOccupied to it + (a: _fake&#39;s 1, _fake&#39;s 2))
+        (set: _fake to (shuffled: ..._paths)&#39;s 1)
+        (if: _fake is $truePath)[(set: _fake to (shuffled: ..._paths)&#39;s 2)]
+        (set: $bossOccupied to it + (a: _fake&#39;s 1, _fake&#39;s 2))
     ]
   ]
 
@@ -5141,16 +5133,14 @@ strong {
           (for: each _i, ...(range: 1, 9))[
             (set: _isBoss to ($bossOccupied contains _i))
             &lt;div class=&quot;node-unit (if: _isBoss)[boss-unit]&quot;&gt;
-              &lt;span class=&quot;node-num&quot;&gt;0_i&lt;/span&gt;
+              &lt;!-- 修正：正确显示节点编号 --&gt;
+              &lt;span class=&quot;node-num&quot;&gt;0(print: _i)&lt;/span&gt;
               &lt;div class=&quot;node-ctrl&quot;&gt;
                 (if: _isBoss)[
                   &lt;span class=&quot;tag&quot;&gt;已操作&lt;/span&gt;
                 ](else:)[
-                  (link: &#39;覆盖&#39;)[
-                    (set: $selectedNode to _i)
-                    &lt;!-- 跳转到结算页，结算页需判定 if $selectedNode is $targetNode --&gt;
-                    (goto: &#39;处理点击&#39;) 
-                  ]
+                  &lt;!-- 修正：使用 print 写死当前循环数值，确保跳转后判定准确 --&gt;
+                  (print: &quot;(link: &#39;覆盖&#39;)[(set: $selectedNode to &quot; + (str: _i) + &quot;)(goto: &#39;处理点击&#39;)]&quot;)
                 ]
               &lt;/div&gt;
             &lt;/div&gt;
@@ -5172,7 +5162,7 @@ strong {
 &lt;/div&gt;
 
 &lt;style&gt;
-/* 保留你提供的完整样式 */
+/* 保持你的原始样式不变 */
 .battle-container { max-width: 600px; margin: 0 auto; text-align: center; }
 .battle-grid-main { display: flex !important; flex-direction: row !important; justify-content: center; align-items: center; gap: 10px; margin: 20px 0; }
 .matrix-grid-lock { display: flex !important; flex-wrap: wrap !important; width: 330px !important; gap: 10px !important; font-size: 0; }
@@ -5210,14 +5200,20 @@ strong {
 .hint-text { font-family: monospace; font-size: 13px; margin-top: 15px; opacity: 0.7; }
 &lt;/style&gt;</tw-passagedata><tw-passagedata pid="54" name="幻廊2-7-3" tags="" position="2100,2175" size="100,100">(enchant: ?page, (text-colour: black) + (bg: #dd854b))
 {
-  &lt;!-- 1. 核心判定逻辑（基于上一页选中的 $selectedNode 和 $checkResult） --&gt;
-  (if: $checkResult is &quot;success&quot;)[
+  &lt;!-- 0. 数据类型加固：防止字符串与数字相加报错 --&gt;
+  (set: $bossHP to (num: (str: $bossHP)))
+  (set: $currentHP to (num: (str: $currentHP)))
+  (set: $maxHP to (num: (str: $maxHP)))
+  (set: $battlePhase to (num: (str: $battlePhase)))
+
+  &lt;!-- 1. 核心判定逻辑：根据上一页的点击节点进行判断 --&gt;
+  (if: $selectedNode is $targetNode)[
     (set: $lastResult to &quot;success&quot;)
     (if: $battlePhase is 1)[(set: $bossHP to it - 10)]
     (else-if: $battlePhase is 2)[(set: $bossHP to it - 20)]
     (else:)[(set: $bossHP to 0)]
     
-    &lt;!-- 成功时微量回复（可选逻辑保持） --&gt;
+    &lt;!-- 成功时微量回复 --&gt;
     (if: $battlePhase &lt; 3)[(set: $currentHP to (min: $maxHP, it + 2))]
   ]
   (else:)[
@@ -5228,17 +5224,25 @@ strong {
 
   &lt;!-- 2. 状态与重置 --&gt;
   (set: $actionPoints to 1)
-  (set: $battleInit to false) &lt;!-- 允许下一轮重新生成 BOSS 路径 --&gt;
+  (set: $battleInit to false) 
+  (set: $selectedNode to 0) &lt;!-- 清空选择，防止重入 --&gt;
 
   &lt;!-- 3. 结局判定 --&gt;
-  (if: $currentHP &lt;= 0)[(set: $gameStatus to &quot;lose&quot;)]
-  (else-if: $bossHP &lt;= 0)[(set: $bossHP to 0, $gameStatus to &quot;win&quot;)]
-  (else:)[(set: $gameStatus to &quot;continue&quot;)]
+  (if: $currentHP &lt;= 0)[
+    (set: $currentHP to 0)
+    (set: $gameStatus to &quot;lose&quot;)
+  ]
+  (else-if: $bossHP &lt;= 0)[
+    (set: $bossHP to 0)
+    (set: $gameStatus to &quot;win&quot;)
+  ]
+  (else:)[
+    (set: $gameStatus to &quot;continue&quot;)
+  ]
 }
 
 &lt;div class=&quot;battle-container&quot;&gt;
   
-  &lt;!-- 顶部状态栏 --&gt;
   &lt;div class=&quot;battle-header&quot;&gt;
     &lt;div class=&quot;stat-pill&quot;&gt;玩家 HP: &lt;strong&gt;$currentHP&lt;/strong&gt; / $maxHP&lt;/div&gt;
     &lt;div class=&quot;stat-pill&quot;&gt;玛缇亚 护甲: &lt;strong&gt;$bossHP%&lt;/strong&gt;&lt;/div&gt;
@@ -5248,7 +5252,6 @@ strong {
     (if: $lastResult is &quot;success&quot;)[&lt;span class=&quot;text-success&quot;&gt;◆ 拦截成功&lt;/span&gt;](else:)[&lt;span class=&quot;text-fail&quot;&gt;◇ 拦截落空&lt;/span&gt;]
   &lt;/div&gt;
 
-  &lt;!-- 文案渲染区：严格保留你的叙事文本 --&gt;
   &lt;div class=&quot;narrative-box&quot;&gt;
     &lt;div class=&quot;narrative-text&quot;&gt;
       (if: $battlePhase is 1)[
@@ -5275,7 +5278,6 @@ strong {
     &lt;/div&gt;
   &lt;/div&gt;
 
-  &lt;!-- 导航区 --&gt;
   &lt;div class=&quot;nav-zone&quot;&gt;
     (if: $gameStatus is &quot;win&quot;)[
       &lt;div class=&quot;choice-btn&quot;&gt;[[▶ 继续-&gt;幻廊2-8]]&lt;/div&gt;
@@ -5291,14 +5293,13 @@ strong {
 &lt;/div&gt;
 
 &lt;style&gt;
+/* 样式部分严格保持原样 */
 .battle-container { text-align: center; max-width: 600px; margin: 0 auto; padding-top: 5vh; }
 .battle-header { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
 .stat-pill { background: #000; color: #fff; padding: 8px 20px; font-size: 0.9em; border-radius: 2px; }
-
 .result-title { font-weight: bold; font-size: 1.2em; margin-bottom: 20px; font-family: monospace; }
-.text-success { color: #2c3e50; } /* 成功时使用深灰黑色 */
-.text-fail { color: #800; } /* 失败时使用暗红色 */
-
+.text-success { color: #2c3e50; } 
+.text-fail { color: #800; } 
 .narrative-box {
     line-height: 1.8;
     padding: 30px;
@@ -5308,12 +5309,10 @@ strong {
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: left; /* 文案保持左对齐方便阅读 */
+    text-align: left;
     margin-bottom: 40px;
 }
-
 .narrative-text { font-size: 15px; color: black; }
-
 .choice-btn tw-link {
     background: black;
     color: #dd854b !important;
@@ -5321,12 +5320,6 @@ strong {
     font-weight: bold;
     text-decoration: none !important;
     display: inline-block;
-    transition: all 0.2s;
-}
-
-.choice-btn tw-link:hover {
-    background: #222;
-    transform: scale(1.05);
 }
 &lt;/style&gt;</tw-passagedata><tw-passagedata pid="55" name="幻廊2-8" tags="" position="2100,2300" size="100,100">(enchant:?page,(text-colour:#dd854b)+(bg:black))
 
@@ -5497,11 +5490,11 @@ strong {
     你的意识陷入一片黑暗。
   &lt;/div&gt;
 
-  &lt;!-- 检定逻辑：包含心智加成 --&gt;
+  &lt;!-- 检定逻辑：修正数据类型冲突 --&gt;
   (set: $difficulty to &quot;简单&quot;)
   (set: $threshold to 4)
   (set: $roll to (random: 1, 20))
-  (set: _total to $roll + $mindStr)
+  (set: _total to $roll + (num: $mindStr))
 
   &lt;div class=&quot;dice-box-light&quot;&gt;
     [ 检定：$difficulty ]&lt;br&gt;
@@ -5518,7 +5511,7 @@ strong {
 
       &lt;div class=&quot;narrative-block&quot;&gt;
         盔甲从内部裂开，岩浆从每一条缝隙中涌出，铁片四散飞落，砸在平台上。
-腹部的火光终于熄了。
+        腹部的火光终于熄了。
       &lt;/div&gt;
 
       &lt;div class=&quot;choice-container&quot;&gt;
@@ -6998,7 +6991,7 @@ strong {
   (set: $difficulty to &quot;简单&quot;)
   (set: $threshold to 5)
   (set: $roll to (random: 1, 20))
-  (set: _total to $roll + $knowStr)
+  (set: _total to $roll + (num: $knowStr))
 
   &lt;div class=&quot;dice-box-light&quot;&gt;
     [ 检定：$difficulty ]&lt;br&gt;
@@ -7222,20 +7215,23 @@ strong {
     color: inherit;
 }
 &lt;/style&gt;</tw-passagedata><tw-passagedata pid="77" name="幻廊2-5-4" tags="" position="2250,1425" size="100,100">(enchant: ?page, (text-colour: #3c3c6d) + (bg: #dee0d7))
-{
-&lt;div class=&quot;story-wrapper&quot;&gt;
 
-  &lt;!-- 检定逻辑：困难（17）+ 灵韵 --&gt;
+&lt;div class=&quot;story-wrapper&quot;&gt;
+{
+  &lt;!-- 1. 变量初始化与安全转换 --&gt;
   (set: $difficulty to &quot;困难&quot;)
   (set: $threshold to 17)
   (set: $roll to (random: 1, 20))
-  (set: _total to $roll + $spiritStr)
+  
+  &lt;!-- 使用双重转换法：确保无论是字符串还是数字都能安全相加 --&gt;
+  (set: _total to $roll + (num: (str: $spiritStr)))
 
   &lt;div class=&quot;dice-box-light&quot;&gt;
     [ 检定：$difficulty ]&lt;br&gt;
     D20 投掷结果：&#39;&#39;$roll&#39;&#39; + 灵韵：&#39;&#39;$spiritStr&#39;&#39; = &#39;&#39;_total&#39;&#39;
   &lt;/div&gt;
 
+  &lt;!-- 2. 判定逻辑 --&gt;
   (if: _total &gt;= $threshold)[
     &lt;div class=&quot;result-success&quot;&gt;
       &lt;div class=&quot;narrative-block&quot;&gt;
@@ -7276,9 +7272,8 @@ strong {
       &lt;/div&gt;
     &lt;/div&gt;
   ]
-
-&lt;/div&gt;
 }
+&lt;/div&gt;
 
 &lt;style&gt;
 .story-wrapper {

@@ -629,7 +629,7 @@ tw-link:hover {
 
   &lt;!-- 检定逻辑 --&gt;
   (set: $roll to (random: 1, 20))
-  (set: _total to $roll + $resoStr)
+  (set: _total to $roll + (num: $resoStr))
   
   &lt;div class=&quot;dice-box&quot;&gt;
     [ 检定：简单 ]&lt;br&gt;
@@ -660,19 +660,19 @@ tw-link:hover {
 
     &lt;!-- 解密交互区 --&gt;
     &lt;div class=&quot;puzzle-section&quot;&gt;
-      (set: _ans to &quot;&quot;)
+      (set: $ans to &quot;&quot;)
       &lt;div class=&quot;puzzle-grid&quot;&gt;
         &lt;div class=&quot;grid-row&quot;&gt;
-          (link-repeat: &quot;室女座&quot;)[(if: _ans is &quot;&quot;)[(set: _ans to &quot;室女&quot;)](else:)[(set: _ans to it + &quot; — 室女&quot;)](replace: ?seq)[_ans]]
-          (link-repeat: &quot;天蝎座&quot;)[(if: _ans is &quot;&quot;)[(set: _ans to &quot;天蝎&quot;)](else:)[(set: _ans to it + &quot; — 天蝎&quot;)](replace: ?seq)[_ans]]
+          (link-repeat: &quot;室女座&quot;)[(if: $ans is &quot;&quot;)[(set: $ans to &quot;室女&quot;)](else:)[(set: $ans to it + &quot; — 室女&quot;)](replace: ?seq)[$ans]]
+          (link-repeat: &quot;天蝎座&quot;)[(if: $ans is &quot;&quot;)[(set: $ans to &quot;天蝎&quot;)](else:)[(set: $ans to it + &quot; — 天蝎&quot;)](replace: ?seq)[$ans]]
         &lt;/div&gt;
         &lt;div class=&quot;grid-row&quot;&gt;
-          (link-repeat: &quot;猎户座&quot;)[(if: _ans is &quot;&quot;)[(set: _ans to &quot;猎户&quot;)](else:)[(set: _ans to it + &quot; — 猎户&quot;)](replace: ?seq)[_ans]]
-          (link-repeat: &quot;天秤座&quot;)[(if: _ans is &quot;&quot;)[(set: _ans to &quot;天秤&quot;)](else:)[(set: _ans to it + &quot; — 天秤&quot;)](replace: ?seq)[_ans]]
+          (link-repeat: &quot;猎户座&quot;)[(if: $ans is &quot;&quot;)[(set: $ans to &quot;猎户&quot;)](else:)[(set: $ans to it + &quot; — 猎户&quot;)](replace: ?seq)[$ans]]
+          (link-repeat: &quot;天秤座&quot;)[(if: $ans is &quot;&quot;)[(set: $ans to &quot;天秤&quot;)](else:)[(set: $ans to it + &quot; — 天秤&quot;)](replace: ?seq)[$ans]]
         &lt;/div&gt;
         &lt;div class=&quot;grid-row&quot;&gt;
-          (link-repeat: &quot;天琴座&quot;)[(if: _ans is &quot;&quot;)[(set: _ans to &quot;天琴&quot;)](else:)[(set: _ans to it + &quot; — 天琴&quot;)](replace: ?seq)[_ans]]
-          (link-repeat: &quot;半人马座&quot;)[(if: _ans is &quot;&quot;)[(set: _ans to &quot;半人马&quot;)](else:)[(set: _ans to it + &quot; — 半人马&quot;)](replace: ?seq)[_ans]]
+          (link-repeat: &quot;天琴座&quot;)[(if: $ans is &quot;&quot;)[(set: $ans to &quot;天琴&quot;)](else:)[(set: $ans to it + &quot; — 天琴&quot;)](replace: ?seq)[$ans]]
+          (link-repeat: &quot;半人马座&quot;)[(if: $ans is &quot;&quot;)[(set: $ans to &quot;半人马&quot;)](else:)[(set: $ans to it + &quot; — 半人马&quot;)](replace: ?seq)[$ans]]
         &lt;/div&gt;
       &lt;/div&gt;
       
@@ -682,9 +682,9 @@ tw-link:hover {
 
       &lt;div class=&quot;choice-container&quot;&gt;
         (link: &quot;▶ 确认连接&quot;)[
-          (if: _ans is &quot;天蝎 — 室女 — 天琴&quot;)[(go-to: &quot;幻廊-海面3&quot;)]
+          (if: $ans is &quot;天蝎 — 室女 — 天琴&quot;)[(go-to: &quot;幻廊-海面3&quot;)]
           (else:)[(go-to: &quot;谜语错误1&quot;)]
-        ] | (link: &quot;↺ 重置&quot;)[(replace: ?seq)[](set: _ans to &quot;&quot;)]
+        ] | (link: &quot;↺ 重置&quot;)[(replace: ?seq)[](set: $ans to &quot;&quot;)]
       &lt;/div&gt;
     &lt;/div&gt;
   ]
@@ -702,90 +702,18 @@ tw-link:hover {
 }
 
 &lt;style&gt;
-.story-wrapper {
-    text-align: center;
-    max-width: 620px;
-    margin: 0 auto;
-    padding-top: 8vh;
-    padding-bottom: 5vh;
-}
-
-.narrative-block {
-    margin-bottom: 25px;
-    line-height: 1.8;
-}
-
-/* 骰子盒样式 - 保持原样 */
-.dice-box {
-    border: 1px solid #3c3c6d;
-    padding: 15px;
-    margin: 20px auto;
-    display: inline-block;
-    min-width: 240px;
-    font-size: 0.9em;
-}
-
-/* 书页引导框 */
-.floor-guide {
-    text-align: left;
-    display: inline-block;
-    max-width: 580px;
-    background: rgba(60, 60, 109, 0.03);
-    border-left: 3px solid rgba(60, 60, 109, 0.4);
-    padding: 20px 30px;
-    margin: 20px auto;
-}
-
-.floor-item {
-    margin-bottom: 15px;
-    line-height: 1.6;
-}
-
-/* 解密网格布局 */
-.puzzle-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin: 30px auto;
-    max-width: 400px;
-}
-
-.grid-row {
-    display: flex;
-    justify-content: space-around;
-}
-
-.current-sequence {
-    font-size: 0.85em;
-    margin: 20px 0;
-    min-height: 1.5em;
-    color: rgba(60, 60, 109, 0.8);
-}
-
-.simple-divider-blue {
-    border: 0;
-    border-top: 1px solid rgba(60, 60, 109, 0.2);
-    width: 60px;
-    margin: 40px auto;
-}
-
-.choice-container {
-    line-height: 2.5;
-}
-
-tw-link {
-    font-weight: bold;
-    color: #3c3c6d !important;
-    text-decoration: none !important;
-}
-
-tw-link:hover {
-    opacity: 0.6;
-}
-
-strong {
-    color: inherit;
-}
+/* CSS 保持不变 */
+.story-wrapper { text-align: center; max-width: 620px; margin: 0 auto; padding-top: 8vh; padding-bottom: 5vh; }
+.narrative-block { margin-bottom: 25px; line-height: 1.8; }
+.dice-box { border: 1px solid #3c3c6d; padding: 15px; margin: 20px auto; display: inline-block; min-width: 240px; font-size: 0.9em; }
+.floor-guide { text-align: left; display: inline-block; max-width: 580px; background: rgba(60, 60, 109, 0.03); border-left: 3px solid rgba(60, 60, 109, 0.4); padding: 20px 30px; margin: 20px auto; }
+.floor-item { margin-bottom: 15px; line-height: 1.6; }
+.puzzle-grid { display: flex; flex-direction: column; gap: 15px; margin: 30px auto; max-width: 400px; }
+.grid-row { display: flex; justify-content: space-around; }
+.current-sequence { font-size: 0.85em; margin: 20px 0; min-height: 1.5em; color: rgba(60, 60, 109, 0.8); }
+.choice-container { line-height: 2.5; }
+tw-link { font-weight: bold; color: #3c3c6d !important; text-decoration: none !important; }
+tw-link:hover { opacity: 0.6; }
 &lt;/style&gt;</tw-passagedata><tw-passagedata pid="9" name="档案_幻廊" tags="" position="1600,375" size="100,100">(enchant:?page,(text-colour:#eeedd7)+(bg:#3f4f5a))
 {
 &lt;div class=&quot;story-wrapper&quot;&gt;
@@ -3953,11 +3881,11 @@ strong {
     你的意识陷入一片黑暗。
   &lt;/div&gt;
 
-  &lt;!-- 检定逻辑：包含心智加成 --&gt;
+  &lt;!-- 检定逻辑：修正数据类型冲突 --&gt;
   (set: $difficulty to &quot;简单&quot;)
   (set: $threshold to 4)
   (set: $roll to (random: 1, 20))
-  (set: _total to $roll + $mindStr)
+  (set: _total to $roll + (num: $mindStr))
 
   &lt;div class=&quot;dice-box-light&quot;&gt;
     [ 检定：$difficulty ]&lt;br&gt;
@@ -4014,6 +3942,7 @@ strong {
 .narrative-block {
     margin-bottom: 25px;
     line-height: 1.8;
+    font-size: 16px;
 }
 
 .dice-box-light {
@@ -4041,6 +3970,7 @@ tw-link {
     font-weight: bold;
     color: #eeedd7 !important;
     text-decoration: none !important;
+    font-size: 16px;
 }
 
 tw-link:hover {
@@ -4214,18 +4144,13 @@ strong {
     “密码为从大到小.....”
   &lt;/div&gt;
 
-  &lt;div class=&quot;narrative-block&quot; style=&quot;opacity: 0.8; font-size: 0.9em;&quot;&gt;
-    看来得先翻翻那些文件，看看有没有线索。
-  &lt;/div&gt;
-
-  &lt;!-- 密码输入区：限制 maxlength 为 1 --&gt;
   &lt;div class=&quot;lock-interface&quot;&gt;
     &lt;div class=&quot;input-row&quot;&gt;
-      &lt;input type=&quot;text&quot; maxlength=&quot;1&quot; oninput=&quot;this.value=this.value.replace(/[^0-9]/g,&#39;&#39;)&quot; id=&quot;p1&quot; class=&quot;dial-input&quot;&gt;
-      &lt;input type=&quot;text&quot; maxlength=&quot;1&quot; oninput=&quot;this.value=this.value.replace(/[^0-9]/g,&#39;&#39;)&quot; id=&quot;p2&quot; class=&quot;dial-input&quot;&gt;
-      &lt;input type=&quot;text&quot; maxlength=&quot;1&quot; oninput=&quot;this.value=this.value.replace(/[^0-9]/g,&#39;&#39;)&quot; id=&quot;p3&quot; class=&quot;dial-input&quot;&gt;
-      &lt;input type=&quot;text&quot; maxlength=&quot;1&quot; oninput=&quot;this.value=this.value.replace(/[^0-9]/g,&#39;&#39;)&quot; id=&quot;p4&quot; class=&quot;dial-input&quot;&gt;
-      &lt;input type=&quot;text&quot; maxlength=&quot;1&quot; oninput=&quot;this.value=this.value.replace(/[^0-9]/g,&#39;&#39;)&quot; id=&quot;p5&quot; class=&quot;dial-input&quot;&gt;
+      (input: bind $p1, &quot;X&quot;)
+      (input: bind $p2, &quot;X&quot;)
+      (input: bind $p3, &quot;X&quot;)
+      (input: bind $p4, &quot;X&quot;)
+      (input: bind $p5, &quot;X&quot;)
     &lt;/div&gt;
   &lt;/div&gt;
 
@@ -4233,20 +4158,12 @@ strong {
 
   &lt;div class=&quot;choice-container&quot;&gt;
     (link: &quot;▶ 尝试开启&quot;)[
-      &lt;script&gt;
-        var pass = 
-          document.getElementById(&#39;p1&#39;).value + 
-          document.getElementById(&#39;p2&#39;).value + 
-          document.getElementById(&#39;p3&#39;).value + 
-          document.getElementById(&#39;p4&#39;).value + 
-          document.getElementById(&#39;p5&#39;).value;
-        
-        if (pass === &quot;97543&quot;) {
-          Engine.goTo(&quot;幻廊2-3&quot;);
-        } else {
-          Engine.goTo(&quot;谜语错误4&quot;);
-        }
-      &lt;/script&gt;
+      (if: $p1 + $p2 + $p3 + $p4 + $p5 is &quot;97543&quot;)[
+        (go-to: &quot;幻廊2-3&quot;)
+      ]
+      (else:)[
+        (go-to: &quot;谜语错误4&quot;)
+      ]
     ]
     &lt;br&gt;
     [[▶ 返回-&gt;幻廊2-1]]
@@ -4261,7 +4178,6 @@ strong {
     max-width: 620px;
     margin: 0 auto;
     padding-top: 10vh;
-    padding-bottom: 5vh;
 }
 
 .narrative-block {
@@ -4269,7 +4185,6 @@ strong {
     line-height: 1.8;
 }
 
-/* 密码锁界面样式 */
 .lock-interface {
     margin: 40px auto;
     padding: 20px;
@@ -4279,31 +4194,28 @@ strong {
     border-radius: 4px;
 }
 
+/* 核心修复：强制横向排列并居中 */
 .input-row {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    gap: 10px;
 }
 
-/* 拨盘样式优化 */
-.dial-input {
+/* 样式适配 */
+tw-expression {
+    display: inline-block !important;
+}
+
+tw-expression input {
     width: 50px !important;
     height: 60px !important;
     text-align: center !important;
-    font-size: 1.8em !important;
+    font-size: 28px !important;
     font-weight: bold !important;
-    font-family: serif;
     background: #e8e9e1 !important;
     border: 2px solid #3c3c6d !important;
     color: #3c3c6d !important;
-    border-radius: 2px;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.dial-input:focus {
-    outline: none;
-    background: #ffffff !important;
-    border-color: #3c3c6d !important;
 }
 
 .simple-divider-blue {
@@ -4317,15 +4229,10 @@ strong {
     line-height: 3;
 }
 
-tw-link, .link {
+tw-link {
     font-weight: bold;
     color: #3c3c6d !important;
     text-decoration: none !important;
-    cursor: pointer;
-}
-
-tw-link:hover, .link:hover {
-    opacity: 0.6;
 }
 &lt;/style&gt;</tw-passagedata><tw-passagedata pid="45" name="幻廊2文件1" tags="" position="2250,775" size="100,100">(enchant: ?page, (text-colour: #3c3c6d) + (bg: #dee0d7))
 {
@@ -7779,23 +7686,18 @@ tw-link:hover {
 }
 &lt;/style&gt;</tw-passagedata><tw-passagedata pid="83" name="▶ 第二次灾厄发生了什么？" tags="" position="2800,2025" size="100,100">(enchant: ?page, (text-colour: #3c3c6d) + (bg: #dee0d7))
 
-新文案替代    &lt;div class=&quot;speech-content&quot;&gt;老文案：
-
-我并不清楚你说的第二次灾厄到底是什么。从我被关进幻廊的那一刻起，关于时间的一切就都断了，我也不知道外面的世界究竟怎么样。他们把我丢在这里之后，再没有人进来过，你是唯一一个会跟我说话的东西。
-
-我只记得，这里最开始还是回廊的样子。但是某一天之后，它开始变形了——变得越来越大，越来越扭曲，完全失控。
-
-
-
-
 {
 &lt;div class=&quot;story-wrapper&quot;&gt;
   &lt;div class=&quot;dialogue-block&quot;&gt;
     &lt;div class=&quot;character-name&quot;&gt;佐罗：&lt;/div&gt;
     &lt;div class=&quot;speech-content&quot;&gt;
-      或许答案正如你对幻廊的解释那般。自从我来到这里，我的执念便已淡去，因为在此之前，我就已经将此生最大的执念完成了，心境再无缺憾。这也许是我能维持理智的原因，当然，其中也掺杂了其他因素……
+      或许答案正如你对幻廊的解释那般。
       &lt;br&gt;&lt;br&gt;
-      但我深知这种克制难以为继。我会倾我所知回答你的疑问，作为交换，我有一个请求：在一切结束后，请将我驱逐。
+      自从我来到这里，我的执念便已淡去。因为在此之前，我就已经将此生最大的执念完成了，心境再无缺憾。这也许是我能维持理智的原因，当然，其中也掺杂了其他因素……
+      &lt;br&gt;&lt;br&gt;
+      但我深知这种克制难以为继。我会倾我所知回答你的疑问，作为交换，我有一个请求：
+      &lt;br&gt;&lt;br&gt;
+      在一切结束后，请将我驱逐。
     &lt;/div&gt;
   &lt;/div&gt;
 
@@ -7830,7 +7732,7 @@ tw-link:hover {
 .speech-content {
     line-height: 1.8;
     font-size: 16px;
-    text-align: center; /* 确保长文本段落内部也居中 */
+    text-align: center;
     display: block;
     margin: 0 auto;
 }
